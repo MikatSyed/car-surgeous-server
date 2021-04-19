@@ -3,7 +3,7 @@ const MongoClient = require('mongodb').MongoClient;
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const app = express()
-// ObjectID = require('mongodb').ObjectID
+ ObjectID = require('mongodb').ObjectID
 
 require('dotenv').config()
 
@@ -37,6 +37,16 @@ client.connect(err => {
     res.send(items)
    })
  })
+
+ app.get('/events/:id',(req,res)=>{
+    const id = ObjectID(req.params.id);
+    productCollection.find({_id:id})
+    .toArray((err,items)=>{
+        res.send(items)
+   
+  
+    })
+  })
 
 
  app.get('/reviews',(req,res)=>{
