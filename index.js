@@ -28,7 +28,7 @@ client.connect(err => {
     console.log('connection sucessfully done',err);
   const productCollection = client.db("carSurgeous").collection("surgeous");
   const reviewCollection = client.db("carSurgeous").collection("reviews");
-  const doctorCollection = client.db("carSurgeous").collection("admins");
+//   const doctorCollection = client.db("carSurgeous").collection("admins");
  
  app.get('/events',(req,res)=>{
    productCollection.find()
@@ -59,41 +59,6 @@ client.connect(err => {
 
   });
 
-  app.post('/addADoctor', (req, res) => {
-    const file = req.files.file;
-    const name = req.body.name;
-    const email = req.body.email;
-    const newImg = file.data;
-    const encImg = newImg.toString('base64');
-
-    var image = {
-        contentType: file.mimetype,
-        size: file.size,
-        img: Buffer.from(encImg, 'base64')
-    };
-
-    doctorCollection.insertOne({ name, email, image })
-        .then(result => {
-            res.send(result.insertedCount > 0);
-        })
-})
-
-app.get('/doctors', (req, res) => {
-    doctorCollection.find({})
-        .toArray((err, documents) => {
-            res.send(documents);
-        })
-});
-
-app.post('/isDoctor', (req, res) => {
-    const email = req.body.email;
-    doctorCollection.find({ email: email })
-        .toArray((err, doctors) => {
-            res.send(doctors.length > 0);
-        })
-})
-
-});
 
   app.post('/addReview',(req,res)=>{
     const newReview = req.body;
@@ -105,7 +70,7 @@ app.post('/isDoctor', (req, res) => {
     });
 
   });
-
+});
 
  
 
