@@ -28,7 +28,7 @@ client.connect(err => {
     console.log('connection sucessfully done',err);
   const productCollection = client.db("carSurgeous").collection("surgeous");
   const reviewCollection = client.db("carSurgeous").collection("reviews");
-//   const doctorCollection = client.db("carSurgeous").collection("admins");
+  const adminCollection = client.db("carSurgeous").collection("admins");
  
  app.get('/events',(req,res)=>{
    productCollection.find()
@@ -57,6 +57,13 @@ client.connect(err => {
     })
   })
 
+  app.get('/admins',(req,res)=>{
+    adminCollection.find()
+    .toArray((err,items)=>{
+     //   
+     res.send(items)
+    })
+  })
 
   app.post('/addElement',(req,res)=>{
     const newElement = req.body;
@@ -80,11 +87,29 @@ client.connect(err => {
     });
 
   });
+
+
+  app.post('/addAdmin',(req,res)=>{
+    const newAdmin = req.body;
+    console.log('add new admin: ', newAdmin);
+    adminCollection.insertOne(newAdmin)
+    .then(result => {
+        console.log('inserted count',result.insertedCount);
+        res.send( result.insertedCount > 0)
+    });
+  });
+  app.get('/isAdmin', (req, res) => {
+    const email = req.query.email;
+    console.log(email);
+    adminCollection.find({ email: email })
+        .toArray((err, doctors) => {
+            res.send(doctors.length > 0);
+        })
+})
+
+
+
+
+
 });
-
- 
-
-
-
-
 app.listen(process.env.PORT || port)
